@@ -19,6 +19,7 @@ import Complex from "./pages/Complex";
 import CreateExecise from "./pages/CreateExecise";
 import Training from "./pages/Training";
 import TrainingCreate from "./pages/TrainingCreate";
+import ChangeDate from "./components/ChangeDate";
 
 export const authRoutes=[
     {
@@ -98,5 +99,10 @@ export const privateRoutes=[
         path: CREATE_TRAINING,
         exact: true,
         component: <TrainingCreate/>
+    },
+    {
+        path: "/test/comp",
+        exact: true,
+        component: <ChangeDate/>
     }
 ]
