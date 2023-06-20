@@ -7,6 +7,8 @@ import {COMPLEX, CREATE_COMPLEX, MUSCULS, MUSCULS_RUS} from "../utils/consts";
 import {getAllExercise, getExercise} from "../api/exerciseApi";
 import {delCurEx, getCurEx} from "../store/exerciseReducer";
 import {createComplex, getComplex, getComplexes} from "../api/complexApi";
+import {delCurCom} from "../store/complexReducer";
+import {createTraining} from "../api/trainingApi";
 
 const TrainingCreate = () => {
     const dispatch = useDispatch();
@@ -18,7 +20,6 @@ const TrainingCreate = () => {
         ]})
     const [exInComplexList,setexInComplexList] = useState([])
     const [comInComplexList,setComInComplexList] = useState([])
-    const [comAndExInComplexList,setComAndExInComplexList] = useState([])
     const exercise = useSelector(state => state.exercise.allExercise)
     const complexes = useSelector(state => state.complex.allComplexes)
     const curExercise = useSelector(state => state.exercise.currentExercise)
@@ -41,12 +42,11 @@ const TrainingCreate = () => {
         spaceDuration:0,
     })
     let [trainingForm, seTtrainingForm] = useState({
-        complexType:"ONE",
-        description:"",
         name:"",
         published:true,
-        repetitions:0,
-        spaceDuration:0,
+        template: true,
+        common: true,
+        description:""
     })
     let [comForm, setComForm] = useState({
         common:false,
@@ -249,7 +249,6 @@ const TrainingCreate = () => {
                     </ListGroupItem>
                 })
             )
-            setComAndExInComplexList((prevState)=>[...prevState,exInComplexList])
         }
         else{
             setexInComplexList('')
@@ -294,10 +293,9 @@ const TrainingCreate = () => {
                             spaceDuration: curComplex.spaceDuration
                 }]
             }})
-            dispatch(delCurEx())
+            dispatch(delCurCom())
         }
     },[curComplex])
-    console.log(comInComplex)
     const showModalAdd=()=>{
         setShow(true)
     }
@@ -305,17 +303,20 @@ const TrainingCreate = () => {
         setShow(false)
     }
 
-    const addComplex=()=>{
-        dispatch(createComplex(complexForm.complexType,complexForm.description,exInComplex,complexForm.name,complexForm.published,complexForm.repetitions,complexForm.spaceDuration))
+    const addTrainig=()=>{
+        dispatch(createTraining(trainingForm.common,comInComplex,exInComplex,trainingForm.description,trainingForm.template,trainingForm.name,trainingForm.published))
         setExInComplex({
             exesices:[]
         })
+        setComInComplex({
+            complexes:[]
+        })
+        setNumberInQue(0)
 
     }
     const deleteExFromComplex=(number)=>{
         let newEx =[]
         exInComplex.exesices.map((data)=>{
-            console.log(data.number)
             if(data.number!==number){
                 newEx.push(data)
             }
@@ -328,124 +329,18 @@ const TrainingCreate = () => {
     const deleteComFromComplex=(number)=>{
         let newEx =[]
         comInComplex.complexes.map((data)=>{
-            console.log(data.number)
             if(data.orderNumber!==number){
                 newEx.push(data)
-            }
-            else {
-
             }
         })
         setComInComplex((state)=>{return{complexes:newEx}})
     }
-    const sortedList=[]
     const sort=()=>{
         const combinedList = [...exInComplexList, ...comInComplexList];
         const sortedList = combinedList.sort((a, b) => a.key - b.key);
         return sortedList
     }
-    const changeNumberUp=(number)=>{
-        if(comInComplex.length!==0){
-            setComInComplex((state) => {
-                const updatedComplex = state.complexes.map((complex) => {
-                    if (complex.orderNumber === number) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...complex,
-                            orderNumber: number+1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    if (complex.orderNumber === number+1) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...complex,
-                            orderNumber: number-1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    return complex;
-                })
-                return {
-                    ...state,
-                    complexes: updatedComplex,
-                };
-                ;})}
-        if(exInComplex.length!==0){
-            setExInComplex((state) => {
-                const updatedComplex = state.exesices.map((exercise) => {
-                    if (exercise.number === number) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...exercise,
-                            orderNumber: number+1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    if (exercise.number === number+1) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...exercise,
-                            orderNumber: number-1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    return exercise;
-                })
-                return {
-                    ...state,
-                    exesices: updatedComplex,
-                };
-                ;}
-            )}
-    }
-    const changeNumberDown=(number)=>{
-        if(comInComplex.length!==0){
-            setComInComplex((state) => {
-                const updatedComplex = state.complexes.map((complex) => {
-                    if (complex.orderNumber === number) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...complex,
-                            orderNumber: number-1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    if (complex.orderNumber === number-1) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...complex,
-                            orderNumber: number+1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    return complex;
-                })
-                return {
-                    ...state,
-                    complexes: updatedComplex,
-                };
-                ;})}
-        if(exInComplex.length!==0){
-            setExInComplex((state) => {
-                const updatedComplex = state.exesices.map((exercise) => {
-                    if (exercise.number === number) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...exercise,
-                            orderNumber: number-1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    if (exercise.number === number-1) {
-                        // Измените нужное поле у определенного элемента
-                        return {
-                            ...exercise,
-                            orderNumber: number+1, // Замените fieldName на нужное имя поля
-                        };
-                    }
-                    return exercise;
-                })
-                return {
-                    ...state,
-                    exesices: updatedComplex,
-                };
-                ;}
-            )}
-    }
+
     useEffect(()=>{
         setHidden(true)
         if(comInComplex.complexes.length!==0){
@@ -514,7 +409,6 @@ const TrainingCreate = () => {
                                 </p>
                                 <ListGroup className="mb-auto">
                                     <ListGroupItem>
-                                        {console.log(data)}
                                         {data.exercises.map((exercise)=>{
                                             return <ListGroupItem key={exercise.exerciseId} className="border border-dark mb-2 mt-2 rounded-4 h-25">
                                                 <Container className="d-flex mb-auto">
@@ -528,23 +422,36 @@ const TrainingCreate = () => {
                                                                     placeholder={exercise.exerciseValues.duration}
                                                                     value={exercise.exerciseValues.duration}
                                                                     aria-describedby="basic-addon1"
-                                                                    onChange={(e)=>{setExInComplex((state) => {
-                                                                        const updatedExercises = state.exesices.map((exercise) => {
-                                                                            if (exercise.number === data.number) {
-                                                                                // Измените нужное поле у определенного элемента
-                                                                                return {
-                                                                                    ...exercise,
-                                                                                    duration: e.target.value, // Замените fieldName на нужное имя поля
-                                                                                };
-                                                                            }
-                                                                            return exercise;
+                                                                    onChange={(e)=>{setComInComplex((state) => {
+                                                                        console.log(state)
+                                                                        const updatedComplex = state.complexes.map((item) => {
+                                                                            console.log(item,data)
+                                                                            const updatedExercises = item.exercises.map((execise) => {
+                                                                                if (execise.orderNumber===exercise.orderNumber && item.orderNumber===data.orderNumber ) {
+                                                                                    // Измените нужное поле у определенного элемента
+                                                                                    return {
+                                                                                        ...exercise,
+                                                                                        exerciseValues: {
+                                                                                            ...exercise.exerciseValues,
+                                                                                            duration: e.target.value,
+                                                                                        },
+                                                                                    };
+                                                                                }
+                                                                                return execise;
+                                                                            });
+
+                                                                            return {
+                                                                                ...item,
+                                                                                exercises: updatedExercises,
+                                                                            };
                                                                         });
 
                                                                         return {
                                                                             ...state,
-                                                                            exesices: updatedExercises,
+                                                                            complexes: updatedComplex,
                                                                         };
-                                                                    });}}
+                                                                    });
+                                                                    }}
                                                                     className="form-control-sm"
                                                                 />
                                                             </InputGroup>m
@@ -555,8 +462,8 @@ const TrainingCreate = () => {
                                                                     placeholder={exercise.exerciseValues.weight}
                                                                     value={exercise.exerciseValues.weight}
                                                                     aria-describedby="basic-addon1"
-                                                                    onChange={(e)=>{setExInComplex((state) => {
-                                                                        const updatedExercises = state.exesices.map((exercise) => {
+                                                                    onChange={(e)=>{setComInComplex((state) => {
+                                                                        const updatedExercises = state.complexes.map((exercise) => {
                                                                             if (exercise.number === data.number) {
                                                                                 // Измените нужное поле у определенного элемента
                                                                                 return {
@@ -566,10 +473,11 @@ const TrainingCreate = () => {
                                                                             }
                                                                             return exercise;
                                                                         });
-
+                                                                        console.log(state)
+                                                                        console.log(updatedExercises)
                                                                         return {
                                                                             ...state,
-                                                                            exesices: updatedExercises,
+                                                                            complexes: updatedExercises,
                                                                         };
                                                                     });}}
                                                                     className="form-control-sm"
@@ -582,13 +490,13 @@ const TrainingCreate = () => {
                                                                     placeholder={exercise.exerciseValues.repetitions}
                                                                     value={exercise.exerciseValues.repetitions}
                                                                     aria-describedby="basic-addon1"
-                                                                    onChange={(e)=>{setExInComplex((state) => {
-                                                                        const updatedExercises = state.exesices.map((exercise) => {
+                                                                    onChange={(e)=>{setComInComplex((state) => {
+                                                                        const updatedExercises = state.complexes.map((exercise) => {
                                                                             if (exercise.number === data.number) {
                                                                                 // Измените нужное поле у определенного элемента
                                                                                 return {
                                                                                     ...exercise,
-                                                                                    repetitions: e.target.value, // Замените fieldName на нужное имя поля
+                                                                                    weight: e.target.value, // Замените fieldName на нужное имя поля
                                                                                 };
                                                                             }
                                                                             return exercise;
@@ -627,11 +535,11 @@ const TrainingCreate = () => {
                                     complexes: updatedComplex,
                                 };
                             });deleteComFromComplex(data.orderNumber)}}></CloseButton>
+
                         </Container>
                     </ListGroupItem>
                 })
             )
-            setComAndExInComplexList((prevState)=>[...prevState,comInComplexList])
         }
         else{
             setComInComplexList('')
@@ -758,41 +666,33 @@ const TrainingCreate = () => {
             </Container>
 
 
-            <Modal show={show} onHide={closeModalAdd} onSubmit={addComplex}>
+            <Modal show={show} onHide={closeModalAdd} onSubmit={addTrainig}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Добавить комлекс</Modal.Title>
+                    <Modal.Title>Добавить тренировку</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group>
                             <Form.Label>
-                                Название комплекса
+                                Название Тренировки
                             </Form.Label>
                             <Form.Control
                                 autoFocus
-                                value={complexForm.name}
+                                value={trainingForm.name}
                                 required
-                                onChange={e=>setComplexForm((state)=>{return {...state,name:e.target.value} })}
+                                onChange={e=>seTtrainingForm((state)=>{return {...state,name:e.target.value} })}
                             />
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
-                                Описание комплекса
+                                Описание Тренировки
                             </Form.Label>
                             <Form.Control
-                                value={complexForm.description}
+                                autoFocus
+                                value={trainingForm.description}
                                 required
-                                onChange={e=>setComplexForm((state)=>{return {...state,description:e.target.value} })}
+                                onChange={e=>seTtrainingForm((state)=>{return {...state,description:e.target.value} })}
                             />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>
-                                Тип комплекса
-                            </Form.Label>
-                            <Form.Select size="sm" onChange={e=>setComplexForm((state)=>{return {...state,complexType:e.target.value} })}>
-                                <option value="ONE">Обычный</option>
-                                <option value="MANY">Круговой</option>
-                            </Form.Select>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>
@@ -802,31 +702,21 @@ const TrainingCreate = () => {
                                         type={'checkbox'}
                             />
                         </Form.Group>
-                        {complexForm.complexType!=="ONE" && <Form.Group>
+                        <Form.Group>
                             <Form.Label>
-                                Повторы
+                                Базовая
                             </Form.Label>
-                            <Form.Control
-                                value={complexForm.repetitions}
-                                onChange={e=>setComplexForm((state)=>{return {...state,repetitions:e.target.value} })}
+                            <Form.Check onChange={e=>seTtrainingForm((state)=>{return {...state,common:e.target.checked} })}
+                                        type={'checkbox'}
                             />
-                        </Form.Group>}
-                        {complexForm.complexType!=="ONE" && <Form.Group>
-                            <Form.Label>
-                                Время отдыха
-                            </Form.Label>
-                            <Form.Control
-                                value={complexForm.spaceDuration}
-                                onChange={e=>setComplexForm((state)=>{return {...state,spaceDuration:e.target.value} })}
-                            />
-                        </Form.Group>}
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary"  onClick={closeModalAdd}>
                         Отмена
                     </Button>
-                    <Button variant="primary" type="submit" onClick={()=> {closeModalAdd();addComplex()}}>
+                    <Button variant="primary" type="submit" onClick={()=> {closeModalAdd();addTrainig()}}>
                         Сохранить
                     </Button>
                 </Modal.Footer>
