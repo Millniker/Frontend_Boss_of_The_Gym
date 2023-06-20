@@ -38,7 +38,6 @@ export const EXERCISE ='/exercise'
 export const CREATE_EXERCISE ='/exercise/create'
 export const COMPLEX ='/complex'
 export const CREATE_COMPLEX ='/complex/create'
-
 export const TRAINING ='/training'
 export const CREATE_TRAINING ='/training/create'
-
+export const APPOINT ='/coaching/appoint'

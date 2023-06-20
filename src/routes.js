@@ -1,4 +1,5 @@
 import {
+    APPOINT,
     COACHING, COMPLEX, CREATE_COMPLEX, CREATE_EXERCISE, CREATE_TRAINING, EXERCISE, GROUPS,
     LOGIN_ROUTE,
     MAIN_PAGE_ROUTE, PROFILE, QUERY_COACHING,
@@ -19,6 +20,7 @@ import Complex from "./pages/Complex";
 import CreateExecise from "./pages/CreateExecise";
 import Training from "./pages/Training";
 import TrainingCreate from "./pages/TrainingCreate";
+import AppointTraning from "./pages/AppointTraning";
 
 export const authRoutes=[
     {
@@ -98,5 +100,10 @@ export const privateRoutes=[
         path: CREATE_TRAINING,
         exact: true,
         component: <TrainingCreate/>
+    },
+    {
+        path: APPOINT,
+        exact: true,
+        component: <AppointTraning/>
     }
 ]
