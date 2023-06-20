@@ -1,25 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
-
+import './styles/custom.scss';
+import './styles/styles.css';
+import {BrowserRouter} from "react-router-dom";
+import AppRouter from "./components/AppRouter";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+          <AppRouter/>
+      </BrowserRouter>
   );
 }
 
 export default App;
+// useEffect(()=>{
+//     dispatch(login("front1233","Zz12345&"))
+// },[])
