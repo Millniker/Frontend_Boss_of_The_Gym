@@ -3,12 +3,13 @@ import {Button, Container, Image, Nav, Navbar} from "react-bootstrap";
 import logo from '../img/gymBoss_icon_white_version_1.svg'
 import {useDispatch, useSelector} from "react-redux";
 import {
+    APPOINT_MY,
     COACHING,
     CREATE_TRAINING,
     LOGIN_ROUTE,
     MAIN_PAGE_ROUTE,
     PROFILE,
-    REGISTRATION_ROUTE,
+    REGISTRATION_ROUTE, SHARING,
     TRAINING
 } from "../utils/consts";
 import {useNavigate} from "react-router-dom";
@@ -40,8 +41,9 @@ const NavBar = () => {
                     <Container className="d-flex me-auto ms-0">
                         <Nav className="align-items-center">
                             {isAuth && <Nav.Link onClick={()=>router(CREATE_TRAINING)}>Создать тренировку</Nav.Link>}
-                            {isAuth && <Nav.Link onClick={()=>router(TRAINING)}>Мои тренировки</Nav.Link>}
+                            {isAuth && <Nav.Link onClick={()=>router(APPOINT_MY)}>Мои тренировки</Nav.Link>}
                             {isAuth && <Nav.Link onClick={()=>router(COACHING)}>Тренерство</Nav.Link>}
+                            {isAuth && <Nav.Link onClick={()=>router(SHARING)}>Поделиться тренировкой</Nav.Link>}
                         </Nav>
                     </Container>
                     <Container>

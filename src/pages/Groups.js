@@ -45,9 +45,6 @@ const Groups = () => {
         }
     }
 
-    const deleteGroupButton=(id)=>{
-        dispatch(deleteGroup(id))
-    }
     const createGroupButton = () => {
         dispatch(createGroup(imageId,name))
     }

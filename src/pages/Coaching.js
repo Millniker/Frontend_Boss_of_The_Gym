@@ -4,7 +4,7 @@ import {acceptQuery, getMyQuery, getMyUsers, rejectQuery} from "../api/trainerAp
 import {Button, Card, Container, Form, InputGroup, ListGroup, ListGroupItem, Pagination} from "react-bootstrap";
 import NavBar from "../components/NavBar";
 import {useNavigate} from "react-router-dom";
-import {APPOINT, GROUPS, QUERY_COACHING} from "../utils/consts";
+import {APPOINT, APPOINT_MY, APPOINTED, GROUPS, QUERY_COACHING} from "../utils/consts";
 import AppointTraning from "./AppointTraning";
 
 const Coaching = () => {
@@ -58,6 +58,7 @@ const Coaching = () => {
                 <Button onClick={()=>router(QUERY_COACHING)}>Очередь на вступление</Button>
                 <Button onClick={()=>router(GROUPS)}>Группы</Button>
                 <Button onClick={()=>router(APPOINT)}>Назначить тренировку</Button>
+                <Button onClick={()=>router(APPOINTED)}>Назначенные тренировки</Button>
                 <InputGroup className="mb-3">
                     <Form.Control
                         placeholder="Имя"

@@ -1,6 +1,12 @@
 import axios from "axios";
 import {BASE_URL} from "../utils/consts";
-import {getAllTrain, getCurTrain} from "../store/trainingReducer";
+import {
+    getAllTrain,
+    getAppointedTrain,
+    getCurrentAppointedTrain,
+    getCurTrain,
+    getMyAppointedTrain
+} from "../store/trainingReducer";
 
 export const createTraining= (common,complexesArray,exercisesArray,description,template,name,published) => {
     return async dispatch => {
@@ -77,11 +83,91 @@ export const getTrainings= (common,liked,my,name,page,size,published,shared) => 
                     published,
 
                 },{ headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
-            console.log(response)
             dispatch(getAllTrain(response))
         } catch (e) {
             console.log(e)
         }
     }
 }
+export const appointTraining= (complexesArray,dates,description,exercisesArray,groupIds,name,userIds) => {
+    return async dispatch => {
+        try {
+            console.log(dates)
+            const exercise = exercisesArray.exesices.map(item => ({
+                exerciseId: item.exerciseId,
+                exerciseValues: {
+                    duration: item.duration,
+                    repetitions: item.repetitions,
+                    weight: item.weight
+                },
+                orderNumber:item.number
+            }));
+            const complexes = complexesArray.complexes.map(item => ({
+                    complexType:item.complexType,
+                    exercises:item.exercises.map(ex => ({
+                            exerciseId:ex.exerciseId,
+                            exerciseValues: {
+                                duration: ex.exerciseValues.duration,
+                                repetitions: ex.exerciseValues.repetitions,
+                                weight: ex.exerciseValues.weight
+                            },
+                            orderNumber: 0
+                        }
+                    )),
+                    orderNumber:item.orderNumber,
+                    spaceDuration:item.spaceDuration,
+                    repetitions:item.repetitions
+                }
+            ));
+            const response = await axios.post(BASE_URL + `training/appoint/`,
+                {
+                    complexes,
+                    dates,
+                    description,
+                    exercise,
+                    groupIds,
+                    name,
+                    userIds
+                },{ headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
+            console.log(response.config.data)
+            console.log(response)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+}
+export const getMyAppointedTrainings= () => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(BASE_URL + `training/appointed/`,
+                { headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
+            dispatch(getMyAppointedTrain(response))
+        } catch (e) {
+            console.log(e)
+        }
+    }
+}
+export const getMyAppointingTrainings= () => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(BASE_URL + `training/appointed/my-training/`,
+                { headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
+            dispatch(getAppointedTrain(response))
+        } catch (e) {
+            console.log(e)
+        }
+    }
+}
+export const getAppointTraining= (id) => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(BASE_URL + `training/appointed/${id}`,
+                { headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
+            dispatch(getCurrentAppointedTrain(response))
+        } catch (e) {
+            console.log(e)
+        }
+    }
+}
+
 

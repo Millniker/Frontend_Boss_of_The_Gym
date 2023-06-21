@@ -16,6 +16,7 @@ class ChangeDate extends React.Component {
         this.onChanged = this.onChanged.bind(this);
         this.timeRef = React.createRef();
         this.dateRef = React.createRef();
+        this.props.setDate(this.state.date)
     }
 
     onAddNew(){
@@ -28,6 +29,7 @@ class ChangeDate extends React.Component {
         let newDate = new Date(year, month, day, hour, minute);
         newDates.push(newDate);
         this.setState({date:newDates});
+        this.props.setDate(newDates)
     }
 
     deleteDate(date){
@@ -35,6 +37,7 @@ class ChangeDate extends React.Component {
         newDates = newDates.filter(function(item) {
             return item !== date
         });
+        this.props.setDate(newDates)
         this.setState({date:newDates});
     }
 
@@ -90,3 +93,4 @@ class ChangeDate extends React.Component {
 
 
 export default ChangeDate;
+

@@ -8,9 +8,12 @@ import {getAllExercise, getExercise} from "../api/exerciseApi";
 import {delCurEx, getCurEx} from "../store/exerciseReducer";
 import {createComplex, getComplex, getComplexes} from "../api/complexApi";
 import {delCurCom, getCurCom} from "../store/complexReducer";
-import {createTraining, getTraining, getTrainings} from "../api/trainingApi";
+import {appointTraining, createTraining, getTraining, getTrainings} from "../api/trainingApi";
 import {getCurTrain} from "../store/trainingReducer";
 import {getMyUsers} from "../api/trainerApi";
+import ChangeDate from "../components/ChangeDate";
+import {getMyTrainGroup} from "../store/groupReducer";
+import {myTrainingGroups} from "../api/groupApi";
 
 const TrainingCreate = () => {
     const dispatch = useDispatch();
@@ -70,7 +73,7 @@ const TrainingCreate = () => {
     const [hidden, setHidden] = useState(true)
     const [musclesList, setMusclesList] = useState([])
     const [options, setOptions] = useState([])
-    const [numberInQue, setNumberInQue] = useState(0)
+    const [numberInQue, setNumberInQue] = useState(1)
     const [exGroup,setExGroup]=useState();
     const [trainGroup,setTrainGroup]=useState();
 
@@ -80,6 +83,7 @@ const TrainingCreate = () => {
         findComplexes()
         findTrainings()
         dispatch(getMyUsers(1,100,''))
+        dispatch(myTrainingGroups(''))
     },[])
 
     useEffect(()=>{
@@ -96,9 +100,17 @@ const TrainingCreate = () => {
             })
         )
     },[muscles])
-
-
     const deleteElement=(elem)=>{
+        let newList=[]
+        muscles.map((data)=>{
+            if(data!==elem){
+                newList.push(data)
+            }
+        })
+        setMuscles(newList)
+    }
+
+    const deleteUsersElement=(elem)=>{
         let newList=[]
         users.map((data)=>{
             if(data!==elem){
@@ -107,7 +119,15 @@ const TrainingCreate = () => {
         })
         setUsers(newList)
     }
-    console.log(complexes)
+    const deleteGroupsElement=(elem)=>{
+        let newList=[]
+        groups.map((data)=>{
+            if(data!==elem){
+                newList.push(data)
+            }
+        })
+        setGroups(newList)
+    }
 
     const findExercises=()=>{
         dispatch(getAllExercise(exForm.common,muscles,exForm.my,exForm.name,exForm.page,exForm.size,exForm.shared))
@@ -290,7 +310,6 @@ const TrainingCreate = () => {
     }
     useEffect(()=> {
         if(curExercise.defaultValues!==undefined){
-            console.log(curExercise)
             setNumberInQue((state)=>state+1)
             setExInComplex((state)=>{return{exesices:[...state.exesices,{
                     exerciseId:curExId,
@@ -307,7 +326,6 @@ const TrainingCreate = () => {
 
     useEffect(()=> {
         if(curComplex.exercises!==undefined){
-            console.log(curComplex)
             setNumberInQue((state)=>state+1)
             setComInComplex((state)=>{return{complexes:[...state.complexes,{
                     complexId:curComplex.id,
@@ -330,14 +348,19 @@ const TrainingCreate = () => {
     }
 
     const addTrainig=()=>{
-        dispatch(createTraining(trainingForm.common,comInComplex,exInComplex,trainingForm.description,trainingForm.template,trainingForm.name,trainingForm.published))
+        dispatch(appointTraining(comInComplex,dates,description,exInComplex,groupsIds,name,usersIds))
         setExInComplex({
             exesices:[]
         })
         setComInComplex({
             complexes:[]
         })
-        setNumberInQue(0)
+        setNumberInQue(1)
+        setDates('')
+        setName('')
+        setDescription('')
+        setUsersList([])
+        setGroupsList([])
 
     }
     const deleteExFromComplex=(number)=>{
@@ -371,11 +394,17 @@ const TrainingCreate = () => {
     }
     useEffect(()=>{
         if(currentTraining.complexes!==undefined){
+            setNumberInQue(currentTraining.complexes.length+1)
             currentTraining.complexes.map((data)=>{
-                dispatch(getComplex(data.complexId))
+                setComInComplex((state)=>{return{complexes:[...state.complexes,{
+                        complexId:data.complexId,
+                        exercises:data.exerciseValues,
+                        orderNumber: data.orderNumber,
+                    }]
+                }})
             })
         }
-        console.log(currentTraining.exercises)
+
         if(currentTraining.exercises!==undefined){
             setNumberInQue(currentTraining.exercises.length+1)
             currentTraining.exercises.map((data)=>{
@@ -391,7 +420,6 @@ const TrainingCreate = () => {
             })
         }
     },[currentTraining])
-
     useEffect(()=>{
         setHidden(true)
         if(comInComplex.complexes.length!==0){
@@ -400,9 +428,6 @@ const TrainingCreate = () => {
                 comInComplex.complexes.map((data)=>{
                     return <ListGroupItem key={data.orderNumber} className="border border-dark mb-2 mt-2 rounded-4 h-25">
                         <Container className="d-flex h-25">
-                            <Container className="d-grid h-25">
-                                <p>{data.name.length >50? data.name.substring(0, 40) + '...' : data.name}</p>
-                            </Container>
                             <Container className="d-grid justify-content-end h-25" >
                                 <p className="mb-0  d-flex">Повторы -
                                     <InputGroup className="mb-3 " style={{width: 50}}>
@@ -461,7 +486,7 @@ const TrainingCreate = () => {
                                 <ListGroup className="mb-auto">
                                     <ListGroupItem>
                                         {data.exercises.map((exercise)=>{
-                                            return <ListGroupItem key={exercise.exerciseId} className="border border-dark mb-2 mt-2 rounded-4 h-25">
+                                            return <ListGroupItem key={exercise.orderNumber} className="border border-dark mb-2 mt-2 rounded-4 h-25">
                                                 <Container className="d-flex mb-auto">
                                                     <Container className="d-grid mb-auto">
                                                         <p>{exercise.name.length >50? exercise.name.substring(0, 40) + '...' :exercise.name}</p>
@@ -474,9 +499,7 @@ const TrainingCreate = () => {
                                                                     value={exercise.exerciseValues.duration}
                                                                     aria-describedby="basic-addon1"
                                                                     onChange={(e)=>{setComInComplex((state) => {
-                                                                        console.log(state)
                                                                         const updatedComplex = state.complexes.map((item) => {
-                                                                            console.log(item,data)
                                                                             const updatedExercises = item.exercises.map((execise) => {
                                                                                 if (execise.orderNumber===exercise.orderNumber && item.orderNumber===data.orderNumber ) {
                                                                                     // Измените нужное поле у определенного элемента
@@ -524,8 +547,7 @@ const TrainingCreate = () => {
                                                                             }
                                                                             return exercise;
                                                                         });
-                                                                        console.log(state)
-                                                                        console.log(updatedExercises)
+
                                                                         return {
                                                                             ...state,
                                                                             complexes: updatedExercises,
@@ -571,6 +593,7 @@ const TrainingCreate = () => {
                             </Container>
                             <CloseButton onClick={()=>{setComInComplex((state) => {
                                 const updatedComplex = state.complexes.map((complex) => {
+                                    console.log("ccvcc")
                                     if (complex.orderNumber === data.orderNumber) {
                                         return {
                                             ...complex,
@@ -597,32 +620,77 @@ const TrainingCreate = () => {
         }
     },[comInComplex])
 
+    console.log(exInComplex, currentTraining)
     const myTrainingUsers= useSelector(state=>state.trainers.myUsers)
     const [comGroup,setComGroup]=useState();
     const [users, setUsers] = useState([])
+    const [usersIds, setUsersIds] = useState([])
+    const [usersOptions, setUsersOptions] = useState([])
     const [usersList, setUsersList] = useState([])
-    console.log(users)
+
     useEffect(()=>{
         setUsersList([])
         if(users.length!==0){
+            setUsersIds([])
             setUsersList(users.map((data) => {
+                myTrainingUsers.data.map((train)=>{
+                    if(data === train.login){
+                        setUsersIds((prevState)=>[...prevState,train.id])
+                    }
+                })
                 return <ListGroup.Item key={data}>
                     <b>{data}</b>
-                    <CloseButton onClick={()=>{deleteElement(data)}}></CloseButton>
+                    <CloseButton onClick={()=>{deleteUsersElement(data)}}></CloseButton>
                 </ListGroup.Item>
             }))}
-        if(myTrainingUsers.data!==undefined && myTrainingUsers){
-        setOptions(myTrainingUsers.data.map((data)=>{
-                return <option key={data.id} value={data.name} disabled={users.includes(data.name)}>{data.name}</option>
+        if(myTrainingUsers.data!==undefined){
+        setUsersOptions(myTrainingUsers.data.map((data)=>{
+            return <option key={data.id} value={data.login} disabled={users.includes(data.name)}>{data.name}</option>
             })
         )}
-    },[users])
+    },[myTrainingUsers,users])
+    const [dates,setDates]=useState([]);
+    const [name,setName]=useState('');
+    const [description,setDescription]=useState('');
+    const fetchingDate=(date)=>{
+        setDates(date)
+    }
+    const myTrainingGroup= useSelector(state=>state.groups.myTrainingGroups)
+    const [groups, setGroups] = useState([])
+    const [groupsIds, setGroupsIds] = useState([])
+    const [groupsList, setGroupsList] = useState([])
+    const[groupOption, setGroupOption] =useState([])
+    useEffect(()=>{
+        setGroupsList([])
+        if(groups.length!==0){
+            setGroupsIds([])
+            setGroupsList(groups.map((data) => {
+                myTrainingGroup.map((train)=>{
+                    if(data === train.name){
+                        setGroupsIds((prevState)=>[...prevState,train.id])
+                    }
+                })
+                return <ListGroup.Item key={data}>
+                    <b>{data}</b>
+                    <CloseButton onClick={()=>{deleteGroupsElement(data)}}></CloseButton>
+                </ListGroup.Item>
+            }))}
+        if(myTrainingGroup.length!==undefined){
+            setGroupOption(myTrainingGroup.map((data)=>{
+                    return <option key={data.id} value={data.login} disabled={groups.includes(data.name)}>{data.name}</option>
+                })
+            )}
+
+    },[myTrainingGroup,groups])
+    console.log(dates)
+
+    console.log(complexes)
     return (
         <Fragment>
             <NavBar/>
             <Container className="d-flex justify-content-start mb-auto">
-                {!showToolsForCreating&&<Button className="mb-auto" onClick={()=>{setShowToolsForCreating(true);findComplexes();setExGroup([]);findTrainings()}}>Создать новую тренировку</Button>}
-                {showToolsForCreating && <Button className="mb-auto" onClick={()=>{setShowToolsForCreating(false);findComplexes();setExGroup([]);findTrainings()}}>Выбрать шаблон</Button>}
+                {!showToolsForCreating&&<Button className="mb-auto" onClick={()=>{setShowToolsForCreating(true);setExGroup([]);setComGroup([]);setTrainGroup([])}}>Создать новую тренировку</Button>}
+                {showToolsForCreating && <Button className="mb-auto" onClick={()=>{setShowToolsForCreating(false);setExGroup([]);setComGroup([]);setTrainGroup([])}}>Выбрать шаблон</Button>}
                 {showToolsForCreating && <Container className="d-grid h-75 mb-auto">
                     <h4>Фильтры</h4>
                     <Container className="d-flex mb-auto">
@@ -811,41 +879,41 @@ const TrainingCreate = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <InputGroup className="mb-3">
-                            <Form.Select aria-label="Default select example" onChange={(e)=>{setUsers((state)=>[...state, e.target.value])}}>
-                                {options}
-                            </Form.Select>
-                        </InputGroup>
+                            <InputGroup className="mb-3">
+                                <Form.Select aria-label="Default select example" onChange={(e)=>{setUsers((state)=>[...state, e.target.value]);}}>
+                                    {usersOptions}
+                                </Form.Select>
+                            </InputGroup>
                         <ListGroup>
                             {usersList}
                         </ListGroup>
-                        <Form.Group>
-                            <Form.Label>
-                                Описание Тренировки
-                            </Form.Label>
-                            <Form.Control
-                                autoFocus
-                                value={trainingForm.description}
-                                required
-                                onChange={e=>seTtrainingForm((state)=>{return {...state,description:e.target.value} })}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>
-                                Публичный
-                            </Form.Label>
-                            <Form.Check onChange={e=>seTtrainingForm((state)=>{return {...state,published:e.target.checked} })}
-                                        type={'checkbox'}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>
-                                Базовая
-                            </Form.Label>
-                            <Form.Check onChange={e=>seTtrainingForm((state)=>{return {...state,common:e.target.checked} })}
-                                        type={'checkbox'}
-                            />
-                        </Form.Group>
+                            <InputGroup className="mb-3">
+                                <Form.Select aria-label="Default select example" onChange={(e)=>{setGroups((state)=>[...state, e.target.value])}}>
+                                    {groupOption}
+                                </Form.Select>
+                            </InputGroup>
+                            <ListGroup>
+                                {groupsList}
+                            </ListGroup>
+                        <Form.Label>
+                            Название тренировки
+                        </Form.Label>
+                        <Form.Control
+                            autoFocus
+                            value={name}
+                            required
+                            onChange={e=>setName(e.target.value)}
+                        />
+                        <Form.Label>
+                            Описание тренировки
+                        </Form.Label>
+                        <Form.Control
+                            autoFocus
+                            value={description}
+                            required
+                            onChange={e=>setDescription(e.target.value)}
+                        />
+                        <ChangeDate setDate={fetchingDate}/>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -862,3 +930,5 @@ const TrainingCreate = () => {
 };
 
 export default TrainingCreate;
+
+

@@ -49,7 +49,7 @@ export const getComplexes= (common,my,name,page,size,shared,liked,published) => 
             const response = await axios.post(BASE_URL + `complexes/`,
                 {
                     common,
-                    liked,
+                    liked:true,
                     my,
                     name,
                     "paginationQueryDto": {

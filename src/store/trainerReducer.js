@@ -1,4 +1,3 @@
-import trainers from "../pages/Trainers";
 const GET_TRAINERS ="GET_TRAINERS"
 const GET_MY_QUERY="GET_MY_QUERY"
 const GET_MY_USERS="GET_MY_USERS"

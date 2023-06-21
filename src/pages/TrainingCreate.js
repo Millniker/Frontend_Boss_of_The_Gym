@@ -3,7 +3,7 @@ import NavBar from "../components/NavBar";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {Button, CloseButton, Container, Form, InputGroup, ListGroup, ListGroupItem, Modal} from "react-bootstrap";
-import {COMPLEX, CREATE_COMPLEX, MUSCULS, MUSCULS_RUS} from "../utils/consts";
+import {COMPLEX, CREATE_COMPLEX, MUSCULS, MUSCULS_RUS, TRAINING} from "../utils/consts";
 import {getAllExercise, getExercise} from "../api/exerciseApi";
 import {delCurEx, getCurEx} from "../store/exerciseReducer";
 import {createComplex, getComplex, getComplexes} from "../api/complexApi";
@@ -657,6 +657,7 @@ const TrainingCreate = () => {
                 <Container className="d-grid mb-auto">
                     <Container className="d-flex">
                         <h2>Создание тренировки</h2>
+                        <Button onClick={()=>router(TRAINING)}>Все тренировки</Button>
                     </Container>
                     <ListGroup className="mb-auto">
                         {sort()}

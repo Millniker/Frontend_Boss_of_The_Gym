@@ -22,7 +22,6 @@ const Exercise = () => {
     const [musclesList, setMusclesList] = useState([])
     const [options, setOptions] = useState([])
     const [exGroup,setExGroup]=useState();
-
     const router = useNavigate()
 
 
@@ -62,7 +61,7 @@ const Exercise = () => {
                 return <ListGroupItem key={data.id}>
                     <Container className="d-flex">
                         <Container className="d-grid">
-                            <b>{data.name}</b>
+                            <a className="text-decoration-none text-dark" onClick={()=>router('/exercise/'+data.id)}><b>{data.name}</b></a>
                         </Container>
                         <p>{data.imageId}</p>
                     </Container>

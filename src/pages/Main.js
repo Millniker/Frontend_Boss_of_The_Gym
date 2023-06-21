@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useState} from 'react';
 import NavBar from "../components/NavBar";
 import {Button, Card, CardGroup, Col, Container, Form, Image, InputGroup, Row} from "react-bootstrap";
 import heroBanner from '../img/heroBanner.svg'
@@ -7,9 +7,17 @@ import gradient from '../img/gradiant_main_page.svg'
 import logo from '../img/gymBoss_icon.svg'
 import {COMPLEX, EXERCISE, TRAINERS} from "../utils/consts";
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {activateToken, useToken} from "../api/shareApi";
 
 const Main = () => {
     const router = useNavigate();
+    const [token,setToken]=useState()
+    const dispatch = useDispatch()
+    const activToken=()=>{
+        dispatch(activateToken(token))
+        setToken('')
+    }
     return (
         <Fragment>
             <NavBar/>
@@ -70,11 +78,14 @@ const Main = () => {
                     <Container className="d-flex justify-content-center">
                         <InputGroup className="mb-3 w-auto">
                             <Form.Control
+                                value={token}
+                                onChange={(e)=>{setToken(e.target.value)}
+                                }
                                 placeholder="Введите код"
                                 aria-label="code"
                             />
                         </InputGroup>
-                        <Button variant="secondary" className="ms-4 h-75">Ок</Button>
+                        <Button variant="secondary" className="ms-4 h-75" onClick={activToken}>Ок</Button>
                     </Container>
                 </Container>
             </div>

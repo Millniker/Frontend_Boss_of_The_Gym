@@ -6,6 +6,8 @@ import groupReducer from "./groupReducer";
 import exerciseReducer from "./exerciseReducer";
 import complexReducer from "./complexReducer";
 import trainingReducer from "./trainingReducer";
+import sharingReducer from "./sharingReducer";
+import likeReducer from "./likeReducer";
 
 const rootReducer = combineReducers({
     user:userReducer,
@@ -13,7 +15,9 @@ const rootReducer = combineReducers({
     groups:groupReducer,
     exercise:exerciseReducer,
     complex:complexReducer,
-    training:trainingReducer
+    training:trainingReducer,
+    sharing:sharingReducer,
+    like:likeReducer
 })
 
 export const store = createStore(rootReducer,applyMiddleware(thunk))

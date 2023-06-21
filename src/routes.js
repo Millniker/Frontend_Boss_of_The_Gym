@@ -1,9 +1,9 @@
 import {
-    APPOINT,
+    APPOINT, APPOINT_MY, APPOINTED,
     COACHING, COMPLEX, CREATE_COMPLEX, CREATE_EXERCISE, CREATE_TRAINING, EXERCISE, GROUPS,
     LOGIN_ROUTE,
     MAIN_PAGE_ROUTE, PROFILE, QUERY_COACHING,
-    REGISTRATION_ROUTE, RESET_PASSWORD, TRAINERS, TRAINING
+    REGISTRATION_ROUTE, RESET_PASSWORD, SHARING, TRAINERS, TRAINING
 } from "./utils/consts";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
@@ -21,6 +21,9 @@ import CreateExecise from "./pages/CreateExecise";
 import Training from "./pages/Training";
 import TrainingCreate from "./pages/TrainingCreate";
 import AppointTraning from "./pages/AppointTraning";
+import AppointedTrainings from "./pages/AppointedTrainings";
+import MyAppointTrainings from "./pages/MyAppointTrainings";
+import Sharing from "./pages/Sharing";
 
 export const authRoutes=[
     {
@@ -105,5 +108,20 @@ export const privateRoutes=[
         path: APPOINT,
         exact: true,
         component: <AppointTraning/>
+    },
+    {
+        path: APPOINTED,
+        exact: true,
+        component: <AppointedTrainings/>
+    },
+    {
+        path: APPOINT_MY,
+        exact: true,
+        component: <MyAppointTrainings/>
+    },
+    {
+        path: SHARING,
+        exact: true,
+        component: <Sharing/>
     }
 ]

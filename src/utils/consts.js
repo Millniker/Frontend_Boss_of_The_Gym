@@ -41,3 +41,7 @@ export const CREATE_COMPLEX ='/complex/create'
 export const TRAINING ='/training'
 export const CREATE_TRAINING ='/training/create'
 export const APPOINT ='/coaching/appoint'
+export const APPOINT_MY ='/appointed/my'
+export const APPOINTED ='/appointed'
+export const SHARING ='/sharing'
+
