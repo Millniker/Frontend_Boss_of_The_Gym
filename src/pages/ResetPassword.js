@@ -1,9 +1,5 @@
 import React, {useState} from 'react';
 import {Button, Container, Form} from "react-bootstrap";
-import {useDispatch} from "react-redux";
-import {resetPassword, sendPasswordCode} from "../api/authApi";
-import {LOGIN_ROUTE} from "../utils/consts";
-import {useNavigate} from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 const ResetPassword = () => {
@@ -11,15 +7,11 @@ const ResetPassword = () => {
     const [login,setLogin] = useState('');
     const [code,setCode] = useState();
     const [password,setPassword] = useState();
-    const dispatch = useDispatch();
-    const router = useNavigate();
     const changePassword=(e)=>{
         e.preventDefault()
-        dispatch(resetPassword(login,code,password))
     }
     const sendCode=()=>{
 
-        dispatch(sendPasswordCode(login))
     }
     return (
         <div>

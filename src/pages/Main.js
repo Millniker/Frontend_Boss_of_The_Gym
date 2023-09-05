@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import NavBar from "../components/NavBar";
 import {Button, Card, CardGroup, Col, Container, Form, Image, InputGroup, Row} from "react-bootstrap";
 import heroBanner from '../img/heroBanner.svg'
@@ -17,14 +17,11 @@ import {
 } from "../utils/consts";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {activateToken, useToken} from "../api/shareApi";
 
 const Main = () => {
     const router = useNavigate();
     const [token,setToken]=useState()
-    const dispatch = useDispatch()
     const activToken=()=>{
-        dispatch(activateToken(token))
         setToken('')
     }
     return (

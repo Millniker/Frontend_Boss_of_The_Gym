@@ -1,12 +1,9 @@
 import React, {Fragment, useState} from 'react';
 import {Button, Container, Form} from "react-bootstrap";
-import {useDispatch} from "react-redux";
-import {registration} from "../api/authApi";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE} from "../utils/consts";
 
 const RegisterForm = () => {
-    const dispatch = useDispatch();
     let [regForm, setRegForm] = useState({
         name:"",
         login:"",
@@ -15,7 +12,6 @@ const RegisterForm = () => {
     })
     const register=(event)=>{
         event.preventDefault()
-        dispatch(registration(regForm.email,regForm.login,regForm.name,regForm.password))
         setRegForm({
             name:"",
             login:"",

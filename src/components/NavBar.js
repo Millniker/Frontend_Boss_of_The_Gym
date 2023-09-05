@@ -1,7 +1,6 @@
 import React, {Fragment, useEffect} from 'react';
 import {Button, Container, Image, Nav, Navbar} from "react-bootstrap";
 import logo from '../img/gymBoss_icon_white_version_1.svg'
-import {useDispatch, useSelector} from "react-redux";
 import {
     APPOINT_MY,
     COACHING,
@@ -13,23 +12,12 @@ import {
     TRAINING
 } from "../utils/consts";
 import {useNavigate} from "react-router-dom";
-import {userLogout} from "../api/authApi";
-import {profile} from "../api/profileApi";
 
 
 const NavBar = () => {
-    const isAuth = useSelector(state => state.user.isAuth)
+    const isAuth = true
     const router = useNavigate()
-    const dispatch = useDispatch();
-    useEffect(()=>{
-        try {
-            dispatch(profile())
-        }catch (e) {
-            console.log(e)
-        }
-    },[isAuth])
     const logout=()=>{
-        dispatch(userLogout())
         router(MAIN_PAGE_ROUTE)
     };
     return (

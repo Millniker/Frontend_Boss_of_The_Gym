@@ -1,6 +1,5 @@
 import React from "react";
 import {useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
 
 const generatePage = (pageName) => {
     const component = () => require(`../pages/${pageName}`).default

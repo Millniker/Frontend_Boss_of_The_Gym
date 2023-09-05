@@ -1,25 +1,18 @@
 import React, {Fragment, useState} from 'react';
 import {Button, Container, Form} from "react-bootstrap";
-import {useDispatch} from "react-redux";
-import {login, registration} from "../api/authApi";
 import {useNavigate} from "react-router-dom";
 import {RESET_PASSWORD} from "../utils/consts";
 
 const LoginForm = () => {
-    const dispatch = useDispatch();
     const router = useNavigate()
     let [logForm, setLogForm] = useState({
         password:"",
         login:""
     })
-    const userLogin=(event)=>{
-        event.preventDefault()
-        dispatch(login(logForm.login,logForm.password))
-    }
     return (
         <Fragment>
             <Container>
-                <Form  onSubmit={userLogin}>
+                <Form>
                     <h1>Вход</h1>
                     <Form.Group className="mb-3">
                         <Form.Label>Login</Form.Label>

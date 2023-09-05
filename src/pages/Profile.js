@@ -1,9 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
 import NavBar from "../components/NavBar";
 import {Button, Col, Container, Form, Modal, Row} from "react-bootstrap";
-import {profile, putProfile} from "../api/profileApi";
-import {promoteToTrainer} from "../api/trainerApi";
 
 const Profile = () => {
     let [userInfo, setUserInfo]=useState({
@@ -15,10 +12,9 @@ const Profile = () => {
         setShow(true);
         setShortName(user.name)
     }
-    const user = useSelector(state => state.user.currentUser);
+    const user =[]
     const [show, setShow] = useState(false);
     const [shortName, setShortName] = useState('');
-    const dispatch = useDispatch()
     useEffect(()=>{
         setUserInfo({
             name:user.name,
@@ -27,10 +23,8 @@ const Profile = () => {
     },[user])
     const updateProfile=(e)=>{
         e.preventDefault()
-        dispatch(putProfile(userInfo.email,userInfo.name))
     }
     const bacomeTrainer=()=>{
-        dispatch(promoteToTrainer(shortName))
     }
     return (
             <Fragment>
