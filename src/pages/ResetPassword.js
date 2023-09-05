@@ -4,6 +4,7 @@ import {useDispatch} from "react-redux";
 import {resetPassword, sendPasswordCode} from "../api/authApi";
 import {LOGIN_ROUTE} from "../utils/consts";
 import {useNavigate} from "react-router-dom";
+import NavBar from "../components/NavBar";
 
 const ResetPassword = () => {
     const [show, setShow] = useState(false);
@@ -22,6 +23,7 @@ const ResetPassword = () => {
     }
     return (
         <div>
+            <NavBar/>
             <Container>
                 <Form  onSubmit={changePassword}>
                     {!show && <Form.Group className="mb-3">

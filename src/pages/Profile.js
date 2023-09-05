@@ -1,15 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import NavBar from "../components/NavBar";
-import {Button, Col, Container, Form, Row} from "react-bootstrap";
+import {Button, Col, Container, Form, Modal, Row} from "react-bootstrap";
 import {profile, putProfile} from "../api/profileApi";
+import {promoteToTrainer} from "../api/trainerApi";
 
 const Profile = () => {
     let [userInfo, setUserInfo]=useState({
         name:"",
         email:""
     })
+    const handleClose = () => setShow(false);
+    const handleShow = () => {
+        setShow(true);
+        setShortName(user.name)
+    }
     const user = useSelector(state => state.user.currentUser);
+    const [show, setShow] = useState(false);
+    const [shortName, setShortName] = useState('');
     const dispatch = useDispatch()
     useEffect(()=>{
         setUserInfo({
@@ -21,8 +29,11 @@ const Profile = () => {
         e.preventDefault()
         dispatch(putProfile(userInfo.email,userInfo.name))
     }
+    const bacomeTrainer=()=>{
+        dispatch(promoteToTrainer(shortName))
+    }
     return (
-            <div>
+            <Fragment>
                 <NavBar/>
                 <Container>
                     <Form onSubmit={updateProfile}>
@@ -51,12 +62,43 @@ const Profile = () => {
                                 <Form.Control type="email" value={userInfo.email} onChange={e=>setUserInfo((actual)=>{return {...actual,email:e.target.value}})} />
                             </Col>
                         </Form.Group>
+                        {!user.isTrainer && <Button variant="primary" type="button" className="float-end ms-2" onClick={handleShow}>
+                            Стать тренером
+                        </Button>}
                         <Button variant="primary" type="submit" className="float-end" >
                             Изменить
                         </Button>
                     </Form>
                 </Container>
-            </div>
+                <Modal show={show} onHide={handleClose} onSubmit={bacomeTrainer}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Стать тренером</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group>
+                                <Form.Label>
+                                    Название спортзала
+                                </Form.Label>
+                                <Form.Control
+                                    autoFocus
+                                    value={shortName}
+                                    required
+                                    onChange={e=>setShortName(e.target.value)}
+                                />
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary"  onClick={handleClose}>
+                            Отмена
+                        </Button>
+                        <Button variant="primary" type="submit" onClick={()=> {bacomeTrainer(); handleClose()}}>
+                            Сохранить
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </Fragment>
     );
 };
 

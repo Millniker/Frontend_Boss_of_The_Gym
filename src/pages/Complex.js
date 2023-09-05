@@ -64,15 +64,8 @@ const Complex = () => {
                         <Form.Check
                             type="switch"
                             id="custom-switch"
-                            label="Базовые упражнения"
+                            label="Базовые комплексы"
                             onChange={(e)=>{setComForm((actual)=>{return {...actual, common:e.target.checked}})}}
-                            className="ms-3 me-3"
-                        />
-                        <Form.Check
-                            type="switch"
-                            id="custom-switch"
-                            label="Назначенные"
-                            onChange={(e)=>{setComForm((actual)=>{return {...actual, shared:e.target.checked}})}}
                             className="ms-3 me-3"
                         />
                         <Form.Check
@@ -80,6 +73,13 @@ const Complex = () => {
                             id="custom-switch"
                             label="Мои"
                             onChange={(e)=>{setComForm((actual)=>{return {...actual, my:e.target.checked}})}}
+                            className="ms-3 me-3"
+                        />
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="Публичные"
+                            onChange={(e)=>{setComForm((actual)=>{return {...actual, published:e.target.checked}})}}
                             className="ms-3 me-3"
                         />
                     </InputGroup>

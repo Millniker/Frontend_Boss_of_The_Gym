@@ -55,10 +55,12 @@ const Coaching = () => {
                         Мои подопечные
                     </h1>
                 </div>
-                <Button onClick={()=>router(QUERY_COACHING)}>Очередь на вступление</Button>
-                <Button onClick={()=>router(GROUPS)}>Группы</Button>
-                <Button onClick={()=>router(APPOINT)}>Назначить тренировку</Button>
-                <Button onClick={()=>router(APPOINTED)}>Назначенные тренировки</Button>
+                <Container className="mb-3">
+                <Button className="me-2" onClick={()=>router(QUERY_COACHING)}>Очередь на вступление</Button>
+                <Button className="me-2" onClick={()=>router(GROUPS)}>Группы</Button>
+                <Button className="me-2" onClick={()=>router(APPOINT)}>Назначить тренировку</Button>
+                <Button className="me-2" onClick={()=>router(APPOINTED)}>Назначенные тренировки</Button>
+                </Container>
                 <InputGroup className="mb-3">
                     <Form.Control
                         placeholder="Имя"

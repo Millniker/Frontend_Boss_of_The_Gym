@@ -32,7 +32,9 @@ const TrainingCreate = () => {
         name:"",
         page:1,
         size:10,
-        shared:false
+        shared:false,
+        published:false,
+        liked:false
     })
     let [complexForm, setComplexForm] = useState({
         complexType:"",
@@ -99,7 +101,7 @@ const TrainingCreate = () => {
 
 
     const findExercises=()=>{
-        dispatch(getAllExercise(exForm.common,muscles,exForm.my,exForm.name,exForm.page,exForm.size,exForm.shared))
+        dispatch(getAllExercise(exForm.common,muscles,exForm.my,exForm.name,exForm.page,exForm.size,exForm.shared,exForm.published,exForm.liked))
     }
     const findComplexes=()=>{
         dispatch(getComplexes(comForm.common,comForm.my,comForm.name,comForm.page,comForm.size,comForm.shared,comForm.liked,comForm.published))
@@ -564,20 +566,28 @@ const TrainingCreate = () => {
                                 onChange={(e)=>{setExForm((actual)=>{return {...actual, common:e.target.checked}})}}
                             />
                         </InputGroup>
-                        <InputGroup className="mb-3">
-                            <Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                label="Назначенные"
-                                onChange={(e)=>{setExForm((actual)=>{return {...actual, shared:e.target.checked}})}}
-                            />
-                        </InputGroup>
                         <InputGroup className="mb-3 ms-3">
                             <Form.Check
                                 type="switch"
                                 id="custom-switch"
                                 label="Мои"
                                 onChange={(e)=>{setExForm((actual)=>{return {...actual, my:e.target.checked}})}}
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3 ms-3">
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Публичные"
+                                onChange={(e)=>{setExForm((actual)=>{return {...actual, liked:e.target.checked}})}}
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3 ms-3">
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Избранное"
+                                onChange={(e)=>{setExForm((actual)=>{return {...actual, published:e.target.checked}})}}
                             />
                         </InputGroup>
                     </Container>
@@ -616,15 +626,8 @@ const TrainingCreate = () => {
                             <Form.Check
                                 type="switch"
                                 id="custom-switch"
-                                label="Базовые упражнения"
+                                label="Базовые комплексы"
                                 onChange={(e)=>{setComForm((actual)=>{return {...actual, common:e.target.checked}})}}
-                                className="ms-3 me-3"
-                            />
-                            <Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                label="Назначенные"
-                                onChange={(e)=>{setComForm((actual)=>{return {...actual, shared:e.target.checked}})}}
                                 className="ms-3 me-3"
                             />
                             <Form.Check
@@ -632,6 +635,20 @@ const TrainingCreate = () => {
                                 id="custom-switch"
                                 label="Мои"
                                 onChange={(e)=>{setComForm((actual)=>{return {...actual, my:e.target.checked}})}}
+                                className="ms-3 me-3"
+                            />
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Избранное"
+                                onChange={(e)=>{setComForm((actual)=>{return {...actual, liked:e.target.checked}})}}
+                                className="ms-3 me-3"
+                            />
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Публичные"
+                                onChange={(e)=>{setComForm((actual)=>{return {...actual, published:e.target.checked}})}}
                                 className="ms-3 me-3"
                             />
                         </InputGroup>
@@ -662,7 +679,7 @@ const TrainingCreate = () => {
                     <ListGroup className="mb-auto">
                         {sort()}
                     </ListGroup>
-                    <Button hidden={hidden} onClick={showModalAdd}>Создать комплекс</Button>
+                    <Button hidden={hidden} onClick={showModalAdd}>Создать тренировку</Button>
                 </Container>
             </Container>
 
@@ -700,14 +717,6 @@ const TrainingCreate = () => {
                                 Публичный
                             </Form.Label>
                             <Form.Check onChange={e=>setComplexForm((state)=>{return {...state,published:e.target.checked} })}
-                                        type={'checkbox'}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>
-                                Базовая
-                            </Form.Label>
-                            <Form.Check onChange={e=>seTtrainingForm((state)=>{return {...state,common:e.target.checked} })}
                                         type={'checkbox'}
                             />
                         </Form.Group>

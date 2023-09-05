@@ -13,7 +13,7 @@ export const registration = (email,login,name, password)=>{
                 name,
                 password
             })
-            swal("Вы успешно зарегестрированы.")
+            swal("Вы успешно зарегестрированы.Поддвердите почту.")
         }
         catch (e){
             if(e.response.data.message === "login already used"){

@@ -2,6 +2,7 @@ import axios from "axios";
 import {BASE_URL} from "../utils/consts";
 import {myTrainingGroups} from "./groupApi";
 import {getSharingToken} from "../store/sharingReducer";
+import swal from 'sweetalert';
 
 export const createToken= (trainings) => {
     const today = new Date(); // Получаем текущую дату
@@ -32,9 +33,9 @@ export const activateToken= (token) => {
         try {
             const response = await axios.post(BASE_URL + `sharing/use?value=${token}`,
                 "",{ headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
-            alert("Код успешно активирован")
+            swal("Доступ открыт")
         } catch (e) {
-            alert("Код не действителен")
+            swal("Код недействителен")
         }
     }
 }

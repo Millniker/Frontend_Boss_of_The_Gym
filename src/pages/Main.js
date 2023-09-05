@@ -1,11 +1,20 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import NavBar from "../components/NavBar";
 import {Button, Card, CardGroup, Col, Container, Form, Image, InputGroup, Row} from "react-bootstrap";
 import heroBanner from '../img/heroBanner.svg'
 import mock from '../img/mock.svg'
 import gradient from '../img/gradiant_main_page.svg'
 import logo from '../img/gymBoss_icon.svg'
-import {COMPLEX, EXERCISE, TRAINERS} from "../utils/consts";
+import {
+    APPOINT_MY,
+    COMPLEX,
+    CREATE_EXERCISE,
+    CREATE_TRAINING,
+    EXERCISE,
+    LOGIN_ROUTE,
+    PROFILE, REGISTRATION_ROUTE,
+    TRAINERS
+} from "../utils/consts";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {activateToken, useToken} from "../api/shareApi";
@@ -28,7 +37,7 @@ const Main = () => {
                         <Col>
                             <h1 className="display-1 hero-title">Создавать тренировки <br/>стало еще проще!</h1>
                             <h2 className="hero-subtitle">Создайте свою первую тренировку</h2>
-                            <Button variant="secondary" className="hero-button mt-4 ms-4">Создать тренировку</Button>
+                            <Button variant="secondary" className="hero-button mt-4 ms-4" onClick={()=>router(CREATE_TRAINING)}>Создать тренировку</Button>
                         </Col>
                     </Row>
 
@@ -41,7 +50,7 @@ const Main = () => {
                     <Card.Body>
                         <Card.Title>Создавайте уникальные упражнения!</Card.Title>
                         <Card.Text className="my-5">
-                            Какое то описание
+                            Создайте упражнений, которое до вас еще никто не делал!
                         </Card.Text>
                     </Card.Body>
                     </a>
@@ -52,7 +61,7 @@ const Main = () => {
                     <Card.Body >
                         <Card.Title>Создайте свой комплекс!</Card.Title>
                         <Card.Text className="my-5">
-                            Какое то описание
+                            Создайте комплекс упражнений, который подойдет именно вам!
                         </Card.Text>
                     </Card.Body>
                     </a>
@@ -63,7 +72,7 @@ const Main = () => {
                     <Card.Body>
                         <Card.Title>Найдите тренера!</Card.Title>
                         <Card.Text className="my-5">
-                            Какое то описание
+                            Найдите тренера, который идеально нам подойдет и начните заниматься уже сегодня!
                         </Card.Text>
 
                     </Card.Body>
@@ -97,10 +106,10 @@ const Main = () => {
                             <div className="d-grid text-center">
                                 <h2 className="ps-4">Тренировки</h2>
                                 <ul>
-                                    <li className="mb-1"><a href="#">Создать тренировку</a></li>
-                                    <li className="mb-1"><a href="#">Добавить упражнение</a></li>
-                                    <li className="mb-1"><a href="#">Начать тренировать</a></li>
-                                    <li className="mb-1"><a href="#">Мои тренировки</a></li>
+                                    <li className="mb-1"><a href="#" onClick={()=>router(CREATE_TRAINING)}>Создать тренировку</a></li>
+                                    <li className="mb-1"><a href="#" onClick={()=>router(CREATE_EXERCISE)}>Добавить упражнение</a></li>
+                                    <li className="mb-1"><a href="#"onClick={()=>router(PROFILE)}>Начать тренировать</a></li>
+                                    <li className="mb-1"><a href="#"onClick={()=>router(APPOINT_MY)}>Мои тренировки</a></li>
                                 </ul>
                             </div>
                         </Col>
@@ -108,9 +117,9 @@ const Main = () => {
                             <div className="d-grid text-center">
                                 <h2 className="ps-4">Содружество</h2>
                                 <ul>
-                                    <li className="mb-1"><a href="#">Войти</a></li>
-                                    <li className="mb-1"><a href="#">Зарегистрироваться</a></li>
-                                    <li className="mb-1"><a href="#">Мой профиль</a></li>
+                                    {!localStorage.getItem('isAuth')&&<li className="mb-1"><a href="#" onClick={()=>router(LOGIN_ROUTE)}>Войти</a></li>}
+                                    {!localStorage.getItem('isAuth')&&<li className="mb-1"><a href="#" onClick={()=>router(REGISTRATION_ROUTE)}>Зарегистрироваться</a></li>}
+                                    <li className="mb-1"><a href="#" onClick={()=>router(PROFILE)}>Мой профиль</a></li>
                                 </ul>
                             </div>
                         </Col>

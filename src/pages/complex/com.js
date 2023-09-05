@@ -30,8 +30,7 @@ const Com = () => {
     },[dispatch])
     console.log(currenComplex)
     useEffect(()=>{
-        if(currenComplex.exercises!==undefined){
-        if(currenComplex.exercises.length!==0){
+        if(currenComplex.name!==undefined){
             setExercise(currenComplex.exercises.map((data)=>{
                 return <ListGroupItem>
                     <Container>
@@ -50,7 +49,7 @@ const Com = () => {
                         </Container>
                     </Container>
                     </ListGroupItem>
-    }))}}},[currenComplex])
+    }))}},[currenComplex])
 
     useEffect(()=>{
         if(currenComplex.name!==undefined) {
@@ -71,7 +70,24 @@ const Com = () => {
                         <p><b>Описание-</b></p>
                         <p>{currenComplex.description}</p>
                         <ListGroup>
-                            {exercise}
+                            {currenComplex.exercises.map((data)=>{
+                            return <ListGroupItem>
+                            <Container>
+                            <Container className="mb-4 d-flex">
+                            <h1>
+                        {data.name}
+                        </h1>
+                    </Container>
+                <Container className="d-grid">
+                    {data.exerciseValues.duration!==null&&<h6> Продолжительность- {data.exerciseValues.duration}</h6>}
+                    {data.exerciseValues.repetitions!==null&&<h6 className="pt-1">Повторы {data.exerciseValues.repetitions}</h6>}
+                    {data.exerciseValues.weight!==null&&<h6 className="pt-1">Вес {data.exerciseValues.weight}</h6>}
+                </Container>
+                <Container>
+                    <p>{data.description}</p>
+                </Container>
+                    </Container>
+                </ListGroupItem>})}
                         </ListGroup>
                     </Container>
             </Container>

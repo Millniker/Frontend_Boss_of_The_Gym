@@ -50,7 +50,6 @@ const Sharing = () => {
         dispatch(getTraining(id))
 
     }
-    console.log(currentTraining)
     useEffect(()=>{
         if(currentTraining.id!==undefined){
         setSharingsIds((prevState)=>[...prevState,currentTraining.id])
@@ -61,7 +60,6 @@ const Sharing = () => {
             }]
         }})}
     },[currentTraining])
-    console.log(trainInTraning)
     const findTrainings=()=>{
         dispatch(getTrainings(trainingFindForm.common,trainingFindForm.liked,trainingFindForm.my,trainingFindForm.name,trainingFindForm.page,trainingFindForm.size,trainingFindForm.published,trainingFindForm.shared))
     }

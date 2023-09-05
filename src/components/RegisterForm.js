@@ -2,6 +2,8 @@ import React, {Fragment, useState} from 'react';
 import {Button, Container, Form} from "react-bootstrap";
 import {useDispatch} from "react-redux";
 import {registration} from "../api/authApi";
+import {useNavigate} from "react-router-dom";
+import {LOGIN_ROUTE} from "../utils/consts";
 
 const RegisterForm = () => {
     const dispatch = useDispatch();
@@ -14,7 +16,14 @@ const RegisterForm = () => {
     const register=(event)=>{
         event.preventDefault()
         dispatch(registration(regForm.email,regForm.login,regForm.name,regForm.password))
+        setRegForm({
+            name:"",
+            login:"",
+            password:"",
+            email:""
+        })
     }
+    const router = useNavigate()
     return (
         <Fragment>
             <Container>
@@ -41,7 +50,7 @@ const RegisterForm = () => {
                     <Button variant="primary" type="submit" >
                         Зарегестрироваться
                     </Button>
-                    <p>Уже есть аккаунт? <Button variant="primary" type="submit" >Вход</Button></p>
+                    <p>Уже есть аккаунт? <Button variant="primary" type="button" className="mt-2" onClick={()=>{router(LOGIN_ROUTE)}} >Вход</Button></p>
                 </Form>
             </Container>
         </Fragment>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {BASE_URL} from "../utils/consts";
 import {getArrayMyQuery, getArrayMyUser, getArrayTrainers} from "../store/trainerReducer";
+import {profile} from "./profileApi";
 
 export const getTrainers= (page,size,shortName) => {
     return async dispatch => {
@@ -115,3 +116,12 @@ export const getMyUsers= (page,size,name) => {
         }
     }
 }
+export const promoteToTrainer= (shortName) => {
+    return async dispatch => {
+            try {
+                const response = await axios.post(BASE_URL + `user/promote/?shortName=${shortName}`,'',{ headers: { Authorization: `${localStorage.getItem('accessToken')}`}})
+                dispatch(profile())
+            } catch (e) {
+                console.log(e)
+            }
+        }}

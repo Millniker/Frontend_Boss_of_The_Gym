@@ -39,8 +39,7 @@ export const getExercise= (exerciseId) => {
 export const getAllExercise= (common,muscleGroups,my,name, page, size, shared,published,liked) => {
     return async dispatch => {
         try {
-            published=false
-            liked = true
+
             const response = await axios.post(BASE_URL + `exercises/`,{
                     common,
                     liked,

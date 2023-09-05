@@ -39,7 +39,9 @@ const TrainingCreate = () => {
         name:"",
         page:1,
         size:10,
-        shared:false
+        shared:false,
+        liked:false,
+        published:false,
     })
     let [trainingForm, seTtrainingForm] = useState({
         name:"",
@@ -100,6 +102,7 @@ const TrainingCreate = () => {
             })
         )
     },[muscles])
+
     const deleteElement=(elem)=>{
         let newList=[]
         muscles.map((data)=>{
@@ -130,7 +133,7 @@ const TrainingCreate = () => {
     }
 
     const findExercises=()=>{
-        dispatch(getAllExercise(exForm.common,muscles,exForm.my,exForm.name,exForm.page,exForm.size,exForm.shared))
+        dispatch(getAllExercise(exForm.common,muscles,exForm.my,exForm.name,exForm.page,exForm.size,exForm.shared,exForm.published,exForm.liked))
     }
     const findComplexes=()=>{
         dispatch(getComplexes(comForm.common,comForm.my,comForm.name,comForm.page,comForm.size,comForm.shared,comForm.liked,comForm.published))
@@ -145,7 +148,7 @@ const TrainingCreate = () => {
                 return <ListGroupItem key={data.id}>
                     <Container className="d-flex">
                         <Container className="d-grid">
-                            <b>{data.name}</b>
+                            <a className="text-dark text-decoration-none" onClick={()=>router('/exercise/'+data.id)}><b>{data.name}</b></a>
                         </Container>
                         <p>{data.imageId}</p>
                         <Button className="h-25" onClick={()=>{getInfoAboutCurEx(data.id)}}>Добавить</Button>
@@ -153,31 +156,35 @@ const TrainingCreate = () => {
                 </ListGroupItem>
             }))}
 
+    },[exercise])
+    useEffect(()=>{
         if(complexes.data && complexes){
             setComGroup(complexes.data.map((data) => {
                 return <ListGroupItem key={data.id}>
                     <Container className="d-flex">
                         <Container className="d-grid">
-                            <b>{data.name}</b>
+                            <a className="text-dark text-decoration-none" onClick={()=>router('/complex/'+data.id)}><b>{data.name}</b></a>
                         </Container>
                         <Button className="h-25" onClick={()=>{getInfoAboutCurCom(data.id)}}>Добавить</Button>
                     </Container>
                 </ListGroupItem>
             }))}
 
-        if(trainings.data && trainings){
-            setTrainGroup(trainings.data.map((data) => {
-                return <ListGroupItem key={data.id}>
-                    <Container className="d-flex">
-                        <Container className="d-grid">
-                            <b>{data.name}</b>
-                        </Container>
-                        <Button className="h-25" onClick={()=>{takeExaple(data.id)}}>Добавить</Button>
-                    </Container>
-                </ListGroupItem>
-            }))}
-    },[exercise,complexes,trainings])
+    },[complexes])
 
+    useEffect(()=>{
+        if(trainings.data && trainings){
+        setTrainGroup(trainings.data.map((data) => {
+            return <ListGroupItem key={data.id}>
+                <Container className="d-flex">
+                    <Container className="d-grid">
+                        <a className="text-dark text-decoration-none" onClick={()=>router('/training/'+data.id)}><b>{data.name}</b></a>
+                    </Container>
+                    <Button className="h-25" onClick={()=>{takeExaple(data.id)}}>Добавить</Button>
+                </Container>
+            </ListGroupItem>
+        }))}
+    },[trainings])
     //отображение убражнений
     useEffect(()=>{
         setHidden(true)
@@ -355,12 +362,15 @@ const TrainingCreate = () => {
         setComInComplex({
             complexes:[]
         })
+        setComInComplexList([])
+        setexInComplexList([])
         setNumberInQue(1)
         setDates('')
         setName('')
         setDescription('')
-        setUsersList([])
-        setGroupsList([])
+        setUsers([])
+        setGroups([])
+
 
     }
     const deleteExFromComplex=(number)=>{
@@ -501,7 +511,8 @@ const TrainingCreate = () => {
                                                                     onChange={(e)=>{setComInComplex((state) => {
                                                                         const updatedComplex = state.complexes.map((item) => {
                                                                             const updatedExercises = item.exercises.map((execise) => {
-                                                                                if (execise.orderNumber===exercise.orderNumber && item.orderNumber===data.orderNumber ) {
+                                                                                console.log(execise,exercise)
+                                                                                if (execise===exercise) {
                                                                                     // Измените нужное поле у определенного элемента
                                                                                     return {
                                                                                         ...exercise,
@@ -698,16 +709,8 @@ const TrainingCreate = () => {
                             <Form.Check
                                 type="switch"
                                 id="custom-switch"
-                                label="Базовые упражнения"
+                                label="Стандартные упражнения"
                                 onChange={(e)=>{setExForm((actual)=>{return {...actual, common:e.target.checked}})}}
-                            />
-                        </InputGroup>
-                        <InputGroup className="mb-3">
-                            <Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                label="Назначенные"
-                                onChange={(e)=>{setExForm((actual)=>{return {...actual, shared:e.target.checked}})}}
                             />
                         </InputGroup>
                         <InputGroup className="mb-3 ms-3">
@@ -718,6 +721,22 @@ const TrainingCreate = () => {
                                 onChange={(e)=>{setExForm((actual)=>{return {...actual, my:e.target.checked}})}}
                             />
                         </InputGroup>
+                        <InputGroup className="mb-3 ms-3">
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Публичные"
+                                onChange={(e)=>{setExForm((actual)=>{return {...actual, published:e.target.checked}})}}
+                            />
+                        </InputGroup>
+                        <InputGroup className="mb-3 ms-3">
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="Избранное"
+                            onChange={(e)=>{setExForm((actual)=>{return {...actual, liked:e.target.checked}})}}
+                        />
+                    </InputGroup>
                     </Container>
                     <InputGroup className="mb-3 pe-3">
                         <InputGroup.Text id="basic-addon1">Название</InputGroup.Text>
@@ -755,15 +774,8 @@ const TrainingCreate = () => {
                             <Form.Check
                                 type="switch"
                                 id="custom-switch"
-                                label="Базовые упражнения"
+                                label="Стандартные комплексы"
                                 onChange={(e)=>{setComForm((actual)=>{return {...actual, common:e.target.checked}})}}
-                                className="ms-3 me-3"
-                            />
-                            <Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                label="Назначенные"
-                                onChange={(e)=>{setComForm((actual)=>{return {...actual, shared:e.target.checked}})}}
                                 className="ms-3 me-3"
                             />
                             <Form.Check
@@ -771,6 +783,20 @@ const TrainingCreate = () => {
                                 id="custom-switch"
                                 label="Мои"
                                 onChange={(e)=>{setComForm((actual)=>{return {...actual, my:e.target.checked}})}}
+                                className="ms-3 me-3"
+                            />
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Публичное"
+                                onChange={(e)=>{setComForm((actual)=>{return {...actual, published:e.target.checked}})}}
+                                className="ms-3 me-3"
+                            />
+                            <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                label="Избранное"
+                                onChange={(e)=>{setComForm((actual)=>{return {...actual, liked:e.target.checked}})}}
                                 className="ms-3 me-3"
                             />
                         </InputGroup>
@@ -802,7 +828,7 @@ const TrainingCreate = () => {
                             <Form.Check
                                 type="switch"
                                 id="custom-switch"
-                                label="Базовые тренировки"
+                                label="Стандартные тренировки"
                                 onChange={(e)=>{setTrainingFind((actual)=>{return {...actual, common:e.target.checked}})}}
                             />
                         </InputGroup>
@@ -862,7 +888,7 @@ const TrainingCreate = () => {
 
                 <Container className="d-grid mb-auto">
                     <Container className="d-flex">
-                        <h2>Создание тренировки</h2>
+                        <h2>Назначение тренировки</h2>
                     </Container>
                     <ListGroup className="mb-auto">
                         {sort()}
@@ -881,6 +907,7 @@ const TrainingCreate = () => {
                     <Form>
                             <InputGroup className="mb-3">
                                 <Form.Select aria-label="Default select example" onChange={(e)=>{setUsers((state)=>[...state, e.target.value]);}}>
+                                    <option>Выбрать пользователей</option>
                                     {usersOptions}
                                 </Form.Select>
                             </InputGroup>
@@ -889,6 +916,7 @@ const TrainingCreate = () => {
                         </ListGroup>
                             <InputGroup className="mb-3">
                                 <Form.Select aria-label="Default select example" onChange={(e)=>{setGroups((state)=>[...state, e.target.value])}}>
+                                    <option>Выбрать группы</option>
                                     {groupOption}
                                 </Form.Select>
                             </InputGroup>
@@ -930,5 +958,6 @@ const TrainingCreate = () => {
 };
 
 export default TrainingCreate;
+
 
 

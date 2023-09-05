@@ -29,9 +29,9 @@ const Id1 = () => {
                                         return<ListGroupItem>
                                             <p>{data.name}</p>
                                             <Container>
-                                                <p>Продолжительность - {data.exerciseValues.duration}</p>
-                                                <p>Повторы - {data.exerciseValues.repetitions}</p>
-                                                <p>Вес - {data.exerciseValues.weight}</p>
+                                                {data.exerciseValues.duration!==null&&<p>Продолжительность - {data.exerciseValues.duration}</p>}
+                                                {data.exerciseValues.repetitions!==null&&<p>Повторы - {data.exerciseValues.repetitions}</p>}
+                                                {data.exerciseValues.weight!==null&&<p>Вес - {data.exerciseValues.weight}</p>}
                                             </Container>
                                         </ListGroupItem>
                                     })}
